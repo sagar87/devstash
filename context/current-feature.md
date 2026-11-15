@@ -1,6 +1,6 @@
 # Current Feature
 
-Dashboard Collections — replace the mock collection data in the dashboard main area with real data from the Neon database via Prisma.
+Dashboard Items — replace the mock item data (pinned and recent items) in the dashboard main area with real data from the Neon database via Prisma.
 
 ## Status
 
@@ -8,21 +8,21 @@ Completed
 
 ## Goals
 
-- Create `src/lib/db/collections.ts` with data fetching functions
-- Fetch collections directly in the server component
-- Show the 6 most recent collection cards, keeping the current design
-- Collection card border color derived from the most-used content type in that collection
-- Show small icons of all item types in that collection
+- Create `src/lib/db/items.ts` with data fetching functions
+- Fetch items directly in the server component
+- Item card icon/border derived from the item type
+- Display item type tags and anything else currently on the cards
+- If there are no pinned items, display nothing in the pinned section
 - Update collection stats display
-- Do not add the items underneath yet (later)
 
 ## Notes
 
-- Spec: @context/features/dashboard-collections-spec.md
+- Spec: @context/features/dashboard-items-spec.md
 - UI reference: @context/screenshots/dashboard-ui-main.png
-- Replaces usage of `collections` in @src/lib/mock-data.ts for the collections section only
+- Replaces usage of `items` in @src/lib/mock-data.ts for the pinned and recent items sections
 - DB item type names are singular lowercase (`snippet`, `prompt`, ...), unlike the plural names in the mock data; icon/color mapping lives in @src/lib/item-type-icons.ts
 - Prisma client: @src/lib/prisma.ts; demo user is demo@devstash.io (no auth yet)
+- Existing fetchers to follow as a pattern: @src/lib/db/collections.ts, @src/lib/db/users.ts
 - Database standards: @context/coding-standards.md
 
 ## History
@@ -51,3 +51,6 @@ Completed
 - Started dashboard collections feature
 - Implemented dashboard collections: src/lib/db/collections.ts + users.ts fetch recent collections and stats from Neon; cards use real data with border color from most-used type and icons for all types
 - Completed dashboard collections feature
+- Started dashboard items feature
+- Implemented dashboard items: src/lib/db/items.ts fetches pinned items, recent items and item stats from Neon; ItemRow and StatsCards use real data
+- Completed dashboard items feature

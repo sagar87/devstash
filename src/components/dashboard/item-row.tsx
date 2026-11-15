@@ -1,15 +1,15 @@
 import { Pin, Star } from "lucide-react";
-import { itemTypes, type Item } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 import { ItemTypeIcon } from "@/components/dashboard/item-type-icon";
 import { getItemTypeBorderClass } from "@/lib/item-type-icons";
+import type { ItemWithType } from "@/types/items";
 
 interface ItemRowProps {
-  item: Item;
+  item: ItemWithType;
 }
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     timeZone: "UTC",
@@ -17,17 +17,17 @@ function formatDate(iso: string): string {
 }
 
 export function ItemRow({ item }: ItemRowProps) {
-  const type = itemTypes.find((t) => t.id === item.typeId);
+  const { type } = item;
 
   return (
     <div
       className={cn(
         "flex items-start gap-4 rounded-xl border border-l-2 bg-card p-4",
-        getItemTypeBorderClass(type?.color)
+        getItemTypeBorderClass(type.color)
       )}
     >
       <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
-        <ItemTypeIcon icon={type?.icon} color={type?.color} className="size-5" />
+        <ItemTypeIcon icon={type.icon} color={type.color} className="size-5" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
@@ -46,7 +46,7 @@ export function ItemRow({ item }: ItemRowProps) {
           ))}
         </div>
       </div>
-      <time dateTime={item.createdAt} className="shrink-0 text-xs text-muted-foreground">
+      <time dateTime={item.createdAt.toISOString()} className="shrink-0 text-xs text-muted-foreground">
         {formatDate(item.createdAt)}
       </time>
     </div>

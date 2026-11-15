@@ -4,24 +4,23 @@ import { DashboardSection } from "@/components/dashboard/dashboard-section";
 import { ItemRow } from "@/components/dashboard/item-row";
 import { StatsCards } from "@/components/dashboard/stats-cards";
 import { getCollectionStats, getRecentCollections } from "@/lib/db/collections";
+import { getItemStats, getPinnedItems, getRecentItems } from "@/lib/db/items";
 import { getDemoUserId } from "@/lib/db/users";
-import { items } from "@/lib/mock-data";
 
 const RECENT_COLLECTIONS_LIMIT = 6;
 const RECENT_ITEMS_LIMIT = 10;
 
 export default async function DashboardPage() {
   const userId = await getDemoUserId();
-  const [recentCollections, collectionStats] = userId
+  const [recentCollections, collectionStats, pinnedItems, recentItems, itemStats] = userId
     ? await Promise.all([
         getRecentCollections(userId, RECENT_COLLECTIONS_LIMIT),
         getCollectionStats(userId),
+        getPinnedItems(userId),
+        getRecentItems(userId, RECENT_ITEMS_LIMIT),
+        getItemStats(userId),
       ])
-    : [[], { total: 0, favorites: 0 }];
-  const pinnedItems = items.filter((item) => item.isPinned);
-  const recentItems = items
-    .toSorted((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .slice(0, RECENT_ITEMS_LIMIT);
+    : [[], { total: 0, favorites: 0 }, [], [], { total: 0, favorites: 0 }];
 
   return (
     <div className="flex flex-col gap-8">
@@ -30,7 +29,7 @@ export default async function DashboardPage() {
         <p className="mt-1 text-muted-foreground">Your developer knowledge hub</p>
       </header>
 
-      <StatsCards collectionStats={collectionStats} />
+      <StatsCards itemStats={itemStats} collectionStats={collectionStats} />
 
       <DashboardSection title="Collections" viewAllHref="/collections">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

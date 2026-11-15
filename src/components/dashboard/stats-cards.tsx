@@ -1,6 +1,6 @@
 import { FolderOpen, Layers, Star, type LucideIcon } from "lucide-react";
-import { items } from "@/lib/mock-data";
 import type { CollectionStats } from "@/types/collections";
+import type { ItemStats } from "@/types/items";
 
 interface Stat {
   label: string;
@@ -9,14 +9,15 @@ interface Stat {
 }
 
 interface StatsCardsProps {
+  itemStats: ItemStats;
   collectionStats: CollectionStats;
 }
 
-export function StatsCards({ collectionStats }: StatsCardsProps) {
+export function StatsCards({ itemStats, collectionStats }: StatsCardsProps) {
   const stats: Stat[] = [
-    { label: "Items", value: items.length, icon: Layers },
+    { label: "Items", value: itemStats.total, icon: Layers },
     { label: "Collections", value: collectionStats.total, icon: FolderOpen },
-    { label: "Favorite Items", value: items.filter((i) => i.isFavorite).length, icon: Star },
+    { label: "Favorite Items", value: itemStats.favorites, icon: Star },
     { label: "Favorite Collections", value: collectionStats.favorites, icon: Star },
   ];
 
