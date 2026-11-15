@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Layers, Settings, Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarLink } from "@/components/dashboard/sidebar-link";
 import { SidebarSection } from "@/components/dashboard/sidebar-section";
@@ -13,6 +14,8 @@ import {
   getItemTypeLabel,
   getItemTypeSlug,
 } from "@/lib/item-type-icons";
+
+const PRO_ITEM_TYPES = new Set(["file", "image"]);
 
 const COLLAPSED_HIDDEN = "group-data-[collapsed=true]/sidebar:hidden";
 
@@ -47,7 +50,19 @@ function TypesNav({ itemTypes }: { itemTypes: ItemTypeWithCount[] }) {
             href={`/items/${getItemTypeSlug(type.name)}`}
             label={getItemTypeLabel(type.name)}
             icon={<Icon className={getItemTypeColorClass(type.color)} />}
-            trailing={type.itemCount}
+            trailing={
+              <span className="flex items-center gap-2">
+                {PRO_ITEM_TYPES.has(type.name) && (
+                  <Badge
+                    variant="outline"
+                    className="h-4 px-1.5 text-[10px] font-medium tracking-wide text-muted-foreground"
+                  >
+                    PRO
+                  </Badge>
+                )}
+                {type.itemCount}
+              </span>
+            }
           />
         );
       })}
