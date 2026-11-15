@@ -1,25 +1,24 @@
 import Link from "next/link";
 import { MoreHorizontal, Star } from "lucide-react";
-import { itemTypes, type Collection } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 import { ItemTypeIcon } from "@/components/dashboard/item-type-icon";
 import { getItemTypeBorderClass } from "@/lib/item-type-icons";
+import type { CollectionWithTypes } from "@/types/collections";
 
 interface CollectionCardProps {
-  collection: Collection;
+  collection: CollectionWithTypes;
 }
 
 export function CollectionCard({ collection }: CollectionCardProps) {
-  const types = collection.typeIds
-    .map((id) => itemTypes.find((t) => t.id === id))
-    .filter((t) => t !== undefined);
+  // Types are sorted most-used first, so the first one sets the border color.
+  const dominantType = collection.types[0];
 
   return (
     <Link
       href={`/collections/${collection.id}`}
       className={cn(
         "flex flex-col gap-2 rounded-xl border border-l-2 bg-card p-5 transition-colors hover:bg-muted/50",
-        getItemTypeBorderClass(types[0]?.color)
+        getItemTypeBorderClass(dominantType?.color)
       )}
     >
       <div className="flex items-center gap-2">
@@ -29,10 +28,12 @@ export function CollectionCard({ collection }: CollectionCardProps) {
         )}
         <MoreHorizontal className="ml-auto size-4 shrink-0 text-muted-foreground" />
       </div>
-      <p className="text-sm text-muted-foreground">{collection.itemCount} items</p>
+      <p className="text-sm text-muted-foreground">
+        {collection.itemCount} {collection.itemCount === 1 ? "item" : "items"}
+      </p>
       <p className="truncate text-sm text-muted-foreground">{collection.description}</p>
       <div className="mt-1 flex gap-2">
-        {types.map((type) => (
+        {collection.types.map((type) => (
           <ItemTypeIcon key={type.id} icon={type.icon} color={type.color} className="size-4" />
         ))}
       </div>

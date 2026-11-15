@@ -3,15 +3,21 @@ import { CollectionCard } from "@/components/dashboard/collection-card";
 import { DashboardSection } from "@/components/dashboard/dashboard-section";
 import { ItemRow } from "@/components/dashboard/item-row";
 import { StatsCards } from "@/components/dashboard/stats-cards";
-import { collections, items } from "@/lib/mock-data";
+import { getCollectionStats, getRecentCollections } from "@/lib/db/collections";
+import { getDemoUserId } from "@/lib/db/users";
+import { items } from "@/lib/mock-data";
 
 const RECENT_COLLECTIONS_LIMIT = 6;
 const RECENT_ITEMS_LIMIT = 10;
 
-export default function DashboardPage() {
-  const recentCollections = collections
-    .toSorted((a, b) => b.updatedAt.localeCompare(a.updatedAt))
-    .slice(0, RECENT_COLLECTIONS_LIMIT);
+export default async function DashboardPage() {
+  const userId = await getDemoUserId();
+  const [recentCollections, collectionStats] = userId
+    ? await Promise.all([
+        getRecentCollections(userId, RECENT_COLLECTIONS_LIMIT),
+        getCollectionStats(userId),
+      ])
+    : [[], { total: 0, favorites: 0 }];
   const pinnedItems = items.filter((item) => item.isPinned);
   const recentItems = items
     .toSorted((a, b) => b.createdAt.localeCompare(a.createdAt))
@@ -24,7 +30,7 @@ export default function DashboardPage() {
         <p className="mt-1 text-muted-foreground">Your developer knowledge hub</p>
       </header>
 
-      <StatsCards />
+      <StatsCards collectionStats={collectionStats} />
 
       <DashboardSection title="Collections" viewAllHref="/collections">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

@@ -1,6 +1,6 @@
 # Current Feature
 
-Seed Data — extend `prisma/seed.ts` to populate the database with a demo user, system item types, and sample collections and items for development and demos.
+Dashboard Collections — replace the mock collection data in the dashboard main area with real data from the Neon database via Prisma.
 
 ## Status
 
@@ -8,19 +8,25 @@ Completed
 
 ## Goals
 
-- Demo user: demo@devstash.io / Demo User, password `12345678` (bcryptjs, 12 rounds), isPro false, emailVerified now
-- 7 system item types (snippet, prompt, command, note, file, image, link) with Lucide icons and colors from the spec
-- Collections with items: React Patterns (3 TS snippets), AI Workflows (3 prompts), DevOps (1 snippet, 1 command, 2 links), Terminal Commands (4 commands), Design Resources (4 links)
-- Use real URLs for link items
+- Create `src/lib/db/collections.ts` with data fetching functions
+- Fetch collections directly in the server component
+- Show the 6 most recent collection cards, keeping the current design
+- Collection card border color derived from the most-used content type in that collection
+- Show small icons of all item types in that collection
+- Update collection stats display
+- Do not add the items underneath yet (later)
 
 ## Notes
 
-- Spec: @context/features/seed-spec.md
-- Existing seed: @prisma/seed.ts (currently seeds only system item types, named plural e.g. "Snippets"; the spec uses singular lowercase names — reconcile with the UI and mock data when implementing)
-- Needs `bcryptjs` (not yet installed)
+- Spec: @context/features/dashboard-collections-spec.md
+- UI reference: @context/screenshots/dashboard-ui-main.png
+- Replaces usage of `collections` in @src/lib/mock-data.ts for the collections section only
+- DB item type names are singular lowercase (`snippet`, `prompt`, ...), unlike the plural names in the mock data; icon/color mapping lives in @src/lib/item-type-icons.ts
+- Prisma client: @src/lib/prisma.ts; demo user is demo@devstash.io (no auth yet)
 - Database standards: @context/coding-standards.md
 
 ## History
+
 
 <!-- Keep this updated, earliest to latest -->
 
@@ -42,3 +48,6 @@ Completed
 - Implemented seed: demo user (bcryptjs), singular system item types (legacy plural names renamed), 5 collections with 18 items; data in prisma/seed-data.ts; extended scripts/test-db.ts
 - Extended scripts/test-db.ts to display demo data and verify it with checks
 - Completed seed data feature
+- Started dashboard collections feature
+- Implemented dashboard collections: src/lib/db/collections.ts + users.ts fetch recent collections and stats from Neon; cards use real data with border color from most-used type and icons for all types
+- Completed dashboard collections feature
