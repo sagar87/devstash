@@ -20,3 +20,7 @@ export interface ItemStats {
   total: number;
   favorites: number;
 }
+
+export interface ItemTypeWithCount extends ItemTypeSummary {
+  itemCount: number;
+}

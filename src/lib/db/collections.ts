@@ -3,6 +3,7 @@ import type {
   CollectionStats,
   CollectionTypeSummary,
   CollectionWithTypes,
+  SidebarCollections,
 } from "@/types/collections";
 
 type ItemTypeRow = Omit<CollectionTypeSummary, "count">;
@@ -20,6 +21,29 @@ function summarizeTypes(itemTypes: ItemTypeRow[]): CollectionTypeSummary[] {
   );
 }
 
+const collectionInclude = {
+  items: {
+    select: {
+      type: { select: { id: true, name: true, icon: true, color: true } },
+    },
+  },
+} as const;
+
+type CollectionRecord = Awaited<
+  ReturnType<typeof prisma.collection.findMany<{ include: typeof collectionInclude }>>
+>[number];
+
+function toCollectionWithTypes({ items, ...collection }: CollectionRecord): CollectionWithTypes {
+  return {
+    id: collection.id,
+    name: collection.name,
+    description: collection.description,
+    isFavorite: collection.isFavorite,
+    itemCount: items.length,
+    types: summarizeTypes(items.map((item) => item.type)),
+  };
+}
+
 export async function getRecentCollections(
   userId: string,
   limit: number,
@@ -28,23 +52,32 @@ export async function getRecentCollections(
     where: { userId },
     orderBy: { updatedAt: "desc" },
     take: limit,
-    include: {
-      items: {
-        select: {
-          type: { select: { id: true, name: true, icon: true, color: true } },
-        },
-      },
-    },
+    include: collectionInclude,
   });
+  return collections.map(toCollectionWithTypes);
+}
 
-  return collections.map(({ items, ...collection }) => ({
-    id: collection.id,
-    name: collection.name,
-    description: collection.description,
-    isFavorite: collection.isFavorite,
-    itemCount: items.length,
-    types: summarizeTypes(items.map((item) => item.type)),
-  }));
+export async function getSidebarCollections(
+  userId: string,
+  recentLimit: number,
+): Promise<SidebarCollections> {
+  const [favorites, recent] = await Promise.all([
+    prisma.collection.findMany({
+      where: { userId, isFavorite: true },
+      orderBy: { name: "asc" },
+      include: collectionInclude,
+    }),
+    prisma.collection.findMany({
+      where: { userId, isFavorite: false },
+      orderBy: { updatedAt: "desc" },
+      take: recentLimit,
+      include: collectionInclude,
+    }),
+  ]);
+  return {
+    favorites: favorites.map(toCollectionWithTypes),
+    recent: recent.map(toCollectionWithTypes),
+  };
 }
 
 export async function getCollectionStats(userId: string): Promise<CollectionStats> {

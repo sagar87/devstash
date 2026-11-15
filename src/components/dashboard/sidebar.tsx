@@ -1,15 +1,18 @@
-import { Folder, Layers, Settings, Star } from "lucide-react";
+import Link from "next/link";
+import { Layers, Settings, Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarLink } from "@/components/dashboard/sidebar-link";
 import { SidebarSection } from "@/components/dashboard/sidebar-section";
-import { collections, currentUser, itemTypes } from "@/lib/mock-data";
+import { currentUser } from "@/lib/mock-data";
+import type { SidebarCollections } from "@/types/collections";
+import type { ItemTypeWithCount } from "@/types/items";
 import {
+  getItemTypeBgClass,
   getItemTypeColorClass,
   getItemTypeIcon,
+  getItemTypeLabel,
   getItemTypeSlug,
 } from "@/lib/item-type-icons";
-
-const RECENT_COLLECTIONS_LIMIT = 5;
 
 const COLLAPSED_HIDDEN = "group-data-[collapsed=true]/sidebar:hidden";
 
@@ -33,7 +36,7 @@ function SidebarHeader() {
   );
 }
 
-function TypesNav() {
+function TypesNav({ itemTypes }: { itemTypes: ItemTypeWithCount[] }) {
   return (
     <SidebarSection title="Types">
       {itemTypes.map((type) => {
@@ -42,7 +45,7 @@ function TypesNav() {
           <SidebarLink
             key={type.id}
             href={`/items/${getItemTypeSlug(type.name)}`}
-            label={type.name}
+            label={getItemTypeLabel(type.name)}
             icon={<Icon className={getItemTypeColorClass(type.color)} />}
             trailing={type.itemCount}
           />
@@ -60,36 +63,40 @@ function SubHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-function CollectionsNav() {
-  const favorites = collections.filter((c) => c.isFavorite);
-  const recent = collections
-    .filter((c) => !c.isFavorite)
-    .toSorted((a, b) => b.updatedAt.localeCompare(a.updatedAt))
-    .slice(0, RECENT_COLLECTIONS_LIMIT);
-
+function CollectionsNav({ collections }: { collections: SidebarCollections }) {
   return (
     <div className={COLLAPSED_HIDDEN}>
       <SidebarSection title="Collections">
         <SubHeading>Favorites</SubHeading>
-        {favorites.map((c) => (
+        {collections.favorites.map((c) => (
           <SidebarLink
             key={c.id}
             href={`/collections/${c.id}`}
             label={c.name}
-            icon={<Folder className="text-muted-foreground" />}
-            trailing={<Star className="size-4 fill-yellow-400 text-yellow-400" />}
-          />
-        ))}
-        <SubHeading>Recent</SubHeading>
-        {recent.map((c) => (
-          <SidebarLink
-            key={c.id}
-            href={`/collections/${c.id}`}
-            label={c.name}
-            icon={<Folder className="text-muted-foreground" />}
+            icon={<Star className="fill-yellow-400 text-yellow-400" />}
             trailing={c.itemCount}
           />
         ))}
+        <SubHeading>Recent</SubHeading>
+        {collections.recent.map((c) => (
+          <SidebarLink
+            key={c.id}
+            href={`/collections/${c.id}`}
+            label={c.name}
+            icon={
+              <span
+                className={`size-2.5 rounded-full ${getItemTypeBgClass(c.types[0]?.color)}`}
+              />
+            }
+            trailing={c.itemCount}
+          />
+        ))}
+        <Link
+          href="/collections"
+          className="mt-1 px-2 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          View all collections
+        </Link>
       </SidebarSection>
     </div>
   );
@@ -117,14 +124,19 @@ function UserArea() {
   );
 }
 
-export function Sidebar() {
+interface SidebarProps {
+  itemTypes: ItemTypeWithCount[];
+  collections: SidebarCollections;
+}
+
+export function Sidebar({ itemTypes, collections }: SidebarProps) {
   return (
     <div className="flex h-full flex-col">
       <SidebarHeader />
       <nav className="min-h-0 flex-1 overflow-y-auto">
-        <TypesNav />
+        <TypesNav itemTypes={itemTypes} />
         <div className="mx-4 border-t" />
-        <CollectionsNav />
+        <CollectionsNav collections={collections} />
       </nav>
       <UserArea />
     </div>

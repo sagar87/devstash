@@ -2,16 +2,30 @@ import { Sidebar } from "@/components/dashboard/sidebar";
 import { DesktopSidebar, MobileSidebar } from "@/components/dashboard/sidebar-containers";
 import { SidebarProvider } from "@/components/dashboard/sidebar-context";
 import { TopBar } from "@/components/dashboard/top-bar";
+import { getSidebarCollections } from "@/lib/db/collections";
+import { getSystemItemTypes } from "@/lib/db/items";
+import { getDemoUserId } from "@/lib/db/users";
 
-export default function DashboardLayout({ children }: LayoutProps<"/dashboard">) {
+const SIDEBAR_RECENT_LIMIT = 5;
+
+export default async function DashboardLayout({ children }: LayoutProps<"/dashboard">) {
+  const userId = await getDemoUserId();
+  const [itemTypes, collections] = userId
+    ? await Promise.all([
+        getSystemItemTypes(userId),
+        getSidebarCollections(userId, SIDEBAR_RECENT_LIMIT),
+      ])
+    : [[], { favorites: [], recent: [] }];
+  const sidebar = <Sidebar itemTypes={itemTypes} collections={collections} />;
+
   return (
     <SidebarProvider>
       <div className="flex h-screen">
         <DesktopSidebar>
-          <Sidebar />
+          {sidebar}
         </DesktopSidebar>
         <MobileSidebar>
-          <Sidebar />
+          {sidebar}
         </MobileSidebar>
         <div className="flex min-w-0 flex-1 flex-col">
           <TopBar />
