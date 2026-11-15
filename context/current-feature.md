@@ -1,6 +1,6 @@
 # Current Feature
 
-Dashboard UI Phase 2 — collapsible sidebar with item types, favorite and recent collections, user avatar area, and a mobile drawer (phase 2 of 3).
+Dashboard UI Phase 3 — main dashboard area with stats cards, recent collections, pinned items, and recent items (phase 3 of 3).
 
 ## Status
 
@@ -8,22 +8,19 @@ Completed
 
 ## Goals
 
-- Collapsible sidebar
-- Items/types with links to /items/TYPE (eg. /items/snippets)
-- Favorite collections
-- Most recent collections
-- User avatar area at the bottom
-- Drawer icon to open/close sidebar
-- Always a drawer on mobile view
+- The main area to the right
+- Recent collections
+- Pinned items
+- 10 recent items
+- 4 stats cards at the top for number of items, collections, favorite items and favorite collections (not in screenshot)
 
 ## Notes
 
-- Spec: @context/features/dashboard-phase-2-spec.md
+- Spec: @context/features/dashboard-phase-3-spec.md
 - UI reference: @context/screenshots/dashboard-ui-main.png
 - Project overview: @context/project-overview.md
 - Mock data: @src/lib/mock-data.ts (import directly until the database is implemented)
-- Previous phase: @context/features/dashboard-phase-1-spec.md
-- Next phase: @context/features/dashboard-phase-3-spec.md
+- Previous phases: @context/features/dashboard-phase-1-spec.md, @context/features/dashboard-phase-2-spec.md
 
 ## History
 
@@ -36,3 +33,6 @@ Completed
 - Started Dashboard UI Phase 2
 - Implemented Phase 2: collapsible sidebar (icon rail on desktop, drawer on mobile) with type links, favorite/recent collections, and user area; added sheet, avatar, collapsible ShadCN components
 - Completed Dashboard UI Phase 2
+- Started Dashboard UI Phase 3
+- Implemented Phase 3: dashboard main area with stats cards, recent collections, pinned items, and recent items (up to 10)
+- Completed Dashboard UI Phase 3

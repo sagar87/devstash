@@ -200,3 +200,6 @@ evens = [x for x in nums if x % 2 == 0]`,
     createdAt: "2025-12-28T10:00:00Z",
   },
 ];
+
+export type Collection = (typeof collections)[number];
+export type Item = (typeof items)[number];
