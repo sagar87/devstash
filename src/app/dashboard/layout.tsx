@@ -1,31 +1,22 @@
-import { Sidebar } from "@/components/dashboard/sidebar";
+import { Suspense } from "react";
 import { DesktopSidebar, MobileSidebar } from "@/components/dashboard/sidebar-containers";
+import { SidebarData } from "@/components/dashboard/sidebar-data";
 import { SidebarProvider } from "@/components/dashboard/sidebar-context";
 import { TopBar } from "@/components/dashboard/top-bar";
-import { getSidebarCollections } from "@/lib/db/collections";
-import { getSystemItemTypes } from "@/lib/db/items";
-import { getDemoUserId } from "@/lib/db/users";
 
-const SIDEBAR_RECENT_LIMIT = 5;
-
-export default async function DashboardLayout({ children }: LayoutProps<"/dashboard">) {
-  const userId = await getDemoUserId();
-  const [itemTypes, collections] = userId
-    ? await Promise.all([
-        getSystemItemTypes(userId),
-        getSidebarCollections(userId, SIDEBAR_RECENT_LIMIT),
-      ])
-    : [[], { favorites: [], recent: [] }];
-  const sidebar = <Sidebar itemTypes={itemTypes} collections={collections} />;
-
+export default function DashboardLayout({ children }: LayoutProps<"/dashboard">) {
   return (
     <SidebarProvider>
       <div className="flex h-screen">
         <DesktopSidebar>
-          {sidebar}
+          <Suspense fallback={<div className="h-full" />}>
+            <SidebarData />
+          </Suspense>
         </DesktopSidebar>
         <MobileSidebar>
-          {sidebar}
+          <Suspense fallback={<div className="h-full" />}>
+            <SidebarData />
+          </Suspense>
         </MobileSidebar>
         <div className="flex min-w-0 flex-1 flex-col">
           <TopBar />

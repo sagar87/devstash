@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Pin } from "lucide-react";
 import { CollectionCard } from "@/components/dashboard/collection-card";
 import { DashboardSection } from "@/components/dashboard/dashboard-section";
@@ -10,7 +11,7 @@ import { getDemoUserId } from "@/lib/db/users";
 const RECENT_COLLECTIONS_LIMIT = 6;
 const RECENT_ITEMS_LIMIT = 10;
 
-export default async function DashboardPage() {
+async function DashboardContent() {
   const userId = await getDemoUserId();
   const [recentCollections, collectionStats, pinnedItems, recentItems, itemStats] = userId
     ? await Promise.all([
@@ -23,12 +24,7 @@ export default async function DashboardPage() {
     : [[], { total: 0, favorites: 0 }, [], [], { total: 0, favorites: 0 }];
 
   return (
-    <div className="flex flex-col gap-8">
-      <header>
-        <h1 className="text-3xl font-semibold">Dashboard</h1>
-        <p className="mt-1 text-muted-foreground">Your developer knowledge hub</p>
-      </header>
-
+    <>
       <StatsCards itemStats={itemStats} collectionStats={collectionStats} />
 
       <DashboardSection title="Collections" viewAllHref="/collections">
@@ -56,6 +52,21 @@ export default async function DashboardPage() {
           ))}
         </div>
       </DashboardSection>
+    </>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <div className="flex flex-col gap-8">
+      <header>
+        <h1 className="text-3xl font-semibold">Dashboard</h1>
+        <p className="mt-1 text-muted-foreground">Your developer knowledge hub</p>
+      </header>
+
+      <Suspense fallback={<p className="text-muted-foreground">Loading...</p>}>
+        <DashboardContent />
+      </Suspense>
     </div>
   );
 }
