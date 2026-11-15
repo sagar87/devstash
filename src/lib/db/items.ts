@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { ItemStats, ItemWithType } from "@/types/items";
+import type { ItemStats, ItemTypeWithCount, ItemWithType } from "@/types/items";
 
 const itemSelect = {
   id: true,
@@ -48,4 +48,28 @@ export async function getItemStats(userId: string): Promise<ItemStats> {
     prisma.item.count({ where: { userId, isFavorite: true } }),
   ]);
   return { total, favorites };
+}
+
+const SYSTEM_TYPE_ORDER = ["snippet", "prompt", "command", "note", "file", "image", "link"];
+
+function systemTypeRank(name: string): number {
+  const index = SYSTEM_TYPE_ORDER.indexOf(name);
+  return index === -1 ? SYSTEM_TYPE_ORDER.length : index;
+}
+
+export async function getSystemItemTypes(userId: string): Promise<ItemTypeWithCount[]> {
+  const types = await prisma.itemType.findMany({
+    where: { isSystem: true },
+    orderBy: { name: "asc" },
+    select: {
+      id: true,
+      name: true,
+      icon: true,
+      color: true,
+      _count: { select: { items: { where: { userId } } } },
+    },
+  });
+  return types
+    .map(({ _count, ...type }) => ({ ...type, itemCount: _count.items }))
+    .sort((a, b) => systemTypeRank(a.name) - systemTypeRank(b.name));
 }

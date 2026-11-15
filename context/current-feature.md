@@ -1,6 +1,6 @@
 # Current Feature
 
-Dashboard Items — replace the mock item data (pinned and recent items) in the dashboard main area with real data from the Neon database via Prisma.
+Stats & Sidebar — show the stats in the main area from database data instead of mock data, and show the system item types and actual collections from the database in the sidebar.
 
 ## Status
 
@@ -8,21 +8,20 @@ Completed
 
 ## Goals
 
-- Create `src/lib/db/items.ts` with data fetching functions
-- Fetch items directly in the server component
-- Item card icon/border derived from the item type
-- Display item type tags and anything else currently on the cards
-- If there are no pinned items, display nothing in the pinned section
-- Update collection stats display
+- Display stats pertaining to database data, keeping the current design/layout
+- Display item types in sidebar with their icons, linking to /items/[typename]
+- Add "View all collections" link under the collections list that goes to /collections
+- Keep the star icons for favorite collections; for recents, show a colored circle based on the most-used item type in that collection
+- Add the database functions to `src/lib/db/items.ts` (use `src/lib/db/collections.ts` for reference)
 
 ## Notes
 
-- Spec: @context/features/dashboard-items-spec.md
-- UI reference: @context/screenshots/dashboard-ui-main.png
-- Replaces usage of `items` in @src/lib/mock-data.ts for the pinned and recent items sections
+- Spec: @context/features/stats-sidebar-spec.md
+- UI reference: @context/screenshots/dashboard-ui-main.png, @context/screenshots/dashboard-ui-drawer.png
+- Replaces usage of mock data in @src/lib/mock-data.ts for stats and the sidebar
 - DB item type names are singular lowercase (`snippet`, `prompt`, ...), unlike the plural names in the mock data; icon/color mapping lives in @src/lib/item-type-icons.ts
 - Prisma client: @src/lib/prisma.ts; demo user is demo@devstash.io (no auth yet)
-- Existing fetchers to follow as a pattern: @src/lib/db/collections.ts, @src/lib/db/users.ts
+- Existing fetchers to follow as a pattern: @src/lib/db/collections.ts, @src/lib/db/users.ts, @src/lib/db/items.ts
 - Database standards: @context/coding-standards.md
 
 ## History
@@ -54,3 +53,6 @@ Completed
 - Started dashboard items feature
 - Implemented dashboard items: src/lib/db/items.ts fetches pinned items, recent items and item stats from Neon; ItemRow and StatsCards use real data
 - Completed dashboard items feature
+- Started stats & sidebar feature
+- Implemented stats & sidebar: sidebar loads system item types (fixed order, capitalized labels, /items/[type] links) and favorite/recent collections from Neon; recents show a colored circle from the most-used type; added "View all collections" link
+- Completed stats & sidebar feature

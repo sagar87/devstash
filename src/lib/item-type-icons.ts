@@ -41,6 +41,20 @@ const ITEM_TYPE_BORDER_CLASSES: Record<string, string> = {
   "#10b981": "border-l-emerald-500",
 };
 
+const ITEM_TYPE_BG_CLASSES: Record<string, string> = {
+  "#3b82f6": "bg-blue-500",
+  "#8b5cf6": "bg-violet-500",
+  "#f97316": "bg-orange-500",
+  "#fde047": "bg-yellow-300",
+  "#6b7280": "bg-gray-500",
+  "#ec4899": "bg-pink-500",
+  "#10b981": "bg-emerald-500",
+};
+
+export function getItemTypeBgClass(color: string | null | undefined): string {
+  return (color && ITEM_TYPE_BG_CLASSES[color]) || "bg-muted-foreground";
+}
+
 export function getItemTypeBorderClass(color: string | null | undefined): string {
   return (color && ITEM_TYPE_BORDER_CLASSES[color]) || "border-l-border";
 }
@@ -55,4 +69,9 @@ export function getItemTypeColorClass(color: string | null | undefined): string 
 
 export function getItemTypeSlug(name: string): string {
   return name.toLowerCase().replace(/\s+/g, "-");
+}
+
+// Display label for a type name stored as singular lowercase, e.g. "snippet" -> "Snippets".
+export function getItemTypeLabel(name: string): string {
+  return `${name.charAt(0).toUpperCase()}${name.slice(1)}s`;
 }
