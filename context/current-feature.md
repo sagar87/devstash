@@ -1,6 +1,6 @@
 # Current Feature
 
-Prisma + Neon PostgreSQL Setup — set up Prisma ORM with a Neon PostgreSQL database.
+Seed Data — extend `prisma/seed.ts` to populate the database with a demo user, system item types, and sample collections and items for development and demos.
 
 ## Status
 
@@ -8,19 +8,17 @@ Completed
 
 ## Goals
 
-- Use Neon PostgreSQL (serverless)
-- Create initial schema based on data models in project-overview.md (this will evolve)
-- Include NextAuth models (Account, Session, VerificationToken)
-- Add appropriate indexes and cascade deletes
+- Demo user: demo@devstash.io / Demo User, password `12345678` (bcryptjs, 12 rounds), isPro false, emailVerified now
+- 7 system item types (snippet, prompt, command, note, file, image, link) with Lucide icons and colors from the spec
+- Collections with items: React Patterns (3 TS snippets), AI Workflows (3 prompts), DevOps (1 snippet, 1 command, 2 links), Terminal Commands (4 commands), Design Resources (4 links)
+- Use real URLs for link items
 
 ## Notes
 
-- Spec: @context/features/database-spec.md
-- Initial data models: @context/project-overview.md
+- Spec: @context/features/seed-spec.md
+- Existing seed: @prisma/seed.ts (currently seeds only system item types, named plural e.g. "Snippets"; the spec uses singular lowercase names — reconcile with the UI and mock data when implementing)
+- Needs `bcryptjs` (not yet installed)
 - Database standards: @context/coding-standards.md
-- Use Prisma 7 (breaking changes) — read the upgrade guide: https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7
-- Setup guide: https://www.prisma.io/docs/getting-started/prisma-orm/quickstart/prisma-postgres
-- Development branch DB is in DATABASE_URL; a separate production branch exists. ALWAYS create migrations (`prisma migrate dev`), never `db push` unless specified.
 
 ## History
 
@@ -40,3 +38,7 @@ Completed
 - Added Prisma 7 schema (NextAuth + DevStash models), prisma.config.ts, and src/lib/prisma.ts client; initial migration pending a Neon DATABASE_URL
 - Applied initial migration to Neon dev DB, added system item type seed (prisma/seed.ts) and scripts/test-db.ts
 - Completed Prisma + Neon PostgreSQL setup
+- Started seed data feature
+- Implemented seed: demo user (bcryptjs), singular system item types (legacy plural names renamed), 5 collections with 18 items; data in prisma/seed-data.ts; extended scripts/test-db.ts
+- Extended scripts/test-db.ts to display demo data and verify it with checks
+- Completed seed data feature
