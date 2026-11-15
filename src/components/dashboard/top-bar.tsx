@@ -1,16 +1,12 @@
-import { FolderPlus, Layers, Plus, Search } from "lucide-react";
+import { FolderPlus, Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SidebarToggle } from "@/components/dashboard/sidebar-toggle";
 
 export function TopBar() {
   return (
-    <header className="flex h-14 shrink-0 items-center gap-4 border-b px-4">
-      <div className="flex w-56 items-center gap-2">
-        <div className="flex size-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-violet-600 text-white">
-          <Layers className="size-4" />
-        </div>
-        <span className="text-lg font-semibold">DevStash</span>
-      </div>
+    <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 sm:gap-4">
+      <SidebarToggle />
 
       <div className="relative w-full max-w-md">
         <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />

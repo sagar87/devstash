@@ -30,6 +30,7 @@ export const collections = [
     isFavorite: true,
     itemCount: 12,
     typeIds: ["type_snippet", "type_note", "type_link"],
+    updatedAt: "2026-01-15T10:00:00Z",
   },
   {
     id: "col_python",
@@ -38,6 +39,7 @@ export const collections = [
     isFavorite: false,
     itemCount: 8,
     typeIds: ["type_snippet", "type_note"],
+    updatedAt: "2026-01-06T10:00:00Z",
   },
   {
     id: "col_context",
@@ -46,6 +48,7 @@ export const collections = [
     isFavorite: true,
     itemCount: 5,
     typeIds: ["type_file", "type_note"],
+    updatedAt: "2026-01-02T10:00:00Z",
   },
   {
     id: "col_interview",
@@ -54,6 +57,7 @@ export const collections = [
     isFavorite: false,
     itemCount: 24,
     typeIds: ["type_note", "type_snippet", "type_link", "type_prompt"],
+    updatedAt: "2026-01-04T10:00:00Z",
   },
   {
     id: "col_git",
@@ -62,6 +66,7 @@ export const collections = [
     isFavorite: true,
     itemCount: 15,
     typeIds: ["type_command", "type_note"],
+    updatedAt: "2026-01-08T10:00:00Z",
   },
   {
     id: "col_ai",
@@ -70,6 +75,7 @@ export const collections = [
     isFavorite: false,
     itemCount: 18,
     typeIds: ["type_prompt", "type_snippet", "type_note"],
+    updatedAt: "2026-01-10T10:00:00Z",
   },
 ];
 
