@@ -1,28 +1,14 @@
 # Current Feature
 
-Stats & Sidebar — show the stats in the main area from database data instead of mock data, and show the system item types and actual collections from the database in the sidebar.
-
 ## Status
 
-Completed
+Not Started
 
 ## Goals
 
-- Display stats pertaining to database data, keeping the current design/layout
-- Display item types in sidebar with their icons, linking to /items/[typename]
-- Add "View all collections" link under the collections list that goes to /collections
-- Keep the star icons for favorite collections; for recents, show a colored circle based on the most-used item type in that collection
-- Add the database functions to `src/lib/db/items.ts` (use `src/lib/db/collections.ts` for reference)
 
 ## Notes
 
-- Spec: @context/features/stats-sidebar-spec.md
-- UI reference: @context/screenshots/dashboard-ui-main.png, @context/screenshots/dashboard-ui-drawer.png
-- Replaces usage of mock data in @src/lib/mock-data.ts for stats and the sidebar
-- DB item type names are singular lowercase (`snippet`, `prompt`, ...), unlike the plural names in the mock data; icon/color mapping lives in @src/lib/item-type-icons.ts
-- Prisma client: @src/lib/prisma.ts; demo user is demo@devstash.io (no auth yet)
-- Existing fetchers to follow as a pattern: @src/lib/db/collections.ts, @src/lib/db/users.ts, @src/lib/db/items.ts
-- Database standards: @context/coding-standards.md
 
 ## History
 
@@ -56,3 +42,6 @@ Completed
 - Started stats & sidebar feature
 - Implemented stats & sidebar: sidebar loads system item types (fixed order, capitalized labels, /items/[type] links) and favorite/recent collections from Neon; recents show a colored circle from the most-used type; added "View all collections" link
 - Completed stats & sidebar feature
+- Started add pro badge feature
+- Implemented add pro badge: ShadCN badge component added; sidebar shows a subtle uppercase PRO badge on the Files and Images types
+- Completed add pro badge feature
